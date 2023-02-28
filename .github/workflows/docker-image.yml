@@ -17,8 +17,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/checkout@v3
     - name: Build the denied page image
-      run: cd deniedpage && docker build . --file Dockerfile --tag ghcr.io/tawmu/pdns-deniedpage:latest && docker push ghcr.io/tawmu/pdns-deniedpage:latest
+      run: cd deniedpage && docker build . --file Dockerfile --tag ghcr.io/tawmu/powerdns-stack/pdns-deniedpage:latest && docker push ghcr.io/tawmu/powerdns-stack/pdns-deniedpage:latest
     - name: Build the pdns master image
-      run: cd pdns-master && docker build . --file Dockerfile --tag ghcr.io/tawmu/pdns-master:latest && docker push ghcr.io/tawmu/pdns-master:latest
+      run: cd pdns-master && docker build . --file Dockerfile --tag ghcr.io/tawmu/powerdns-stack/pdns-master:latest && docker push ghcr.io/tawmu/powerdns-stack/pdns-master:latest
     - name: Build the pdns recursor image
-      run: cd pdns-recursor && docker build . --file Dockerfile --tag ghcr.io/tawmu/pdns-recursor:latest && docker push ghcr.io/tawmu/pdns-recursor:latest
+      run: cd pdns-recursor && docker build . --file Dockerfile --tag ghcr.io/tawmu/powerdns-stack/pdns-recursor:latest && docker push ghcr.io/tawmu/powerdns-stack/pdns-recursor:latest
