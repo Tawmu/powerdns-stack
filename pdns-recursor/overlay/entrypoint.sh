@@ -6,6 +6,10 @@ set -e
 #echo "Got resolver address of ${MASTER_ADDR}"
 #     --forward-zones="_msdcs.epiclan.local=${MASTER_ADDR}:5300, epiclan.local=${MASTER_ADDR}:5300, event.epiclan.net=${MASTER_ADDR}:5300, event=${MASTER_ADDR}:5300, redirect.epicservers.co.uk=${MASTER_ADDR}:5300, sourcebans.epicservers.co.uk=${MASTER_ADDR}:5300, unifi=${MASTER_ADDR}:5300, www=${MASTER_ADDR}:5300" \
 #    --forward-zones-recurse=".=${UPSTREAM_RECURSOR}"
+#
+#     --forward-zones=".=${UPSTREAM_RECURSOR}"
+#    --forward-zones-recurse=".=${MASTER_ADDR}:5300"
+
 
 echo "Starting PowerDNS Recursor..."
 /usr/sbin/pdns_recursor \
@@ -17,5 +21,4 @@ echo "Starting PowerDNS Recursor..."
     --api-key=$PDNS_API_KEY \
     --network-timeout=5000 \
     --allow-from="${ALLOW_FROM}" \
-    --forward-zones=".=${UPSTREAM_RECURSOR}"
-    --forward-zones-recurse=".=${MASTER_ADDR}:5300"
+    --forward-zones-recurse=.=${MASTER_ADDR}:5300;${UPSTREAM_RECURSOR}
