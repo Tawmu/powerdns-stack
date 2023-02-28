@@ -1,22 +1,24 @@
-name: Docker Image CI
-
+name: publish
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+    
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
+    - name: Log in to the Container registry
+      uses: docker/login-action@v2.1.0
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/checkout@v3
     - name: Build the denied page image
-      run: cd deniedpage && docker build . --file Dockerfile --tag pdns-deniedpage:latest
+      run: cd deniedpage && docker build . --file Dockerfile --tag tawmu/pdns-deniedpage:latest && docker push ghcr.io/tawmu/pdns-deniedpage:latest
     - name: Build the pdns master image
-      run: cd pdns-master && docker build . --file Dockerfile --tag pdns-master:latest
+      run: cd pdns-master && docker build . --file Dockerfile --tag tawmu/pdns-master:latest && docker push ghcr.io/tawmu/pdns-master:latest
     - name: Build the pdns recursor image
-      run: cd pdns-recursor && docker build . --file Dockerfile --tag pdns-recursor:latest
+      run: cd pdns-recursor && docker build . --file Dockerfile --tag tawmu/pdns-recursor:latest && docker push ghcr.io/tawmu/pdns-recursor:latest
