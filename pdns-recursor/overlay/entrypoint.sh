@@ -18,4 +18,4 @@ echo "Starting PowerDNS Recursor..."
     --network-timeout=5000 \
     --allow-from="${ALLOW_FROM}" \
     --forward-zones=".=${MASTER_ADDR}:5300"
-    --forward-zones-recurse=".${UPSTREAM_RECURSOR}"
+    --forward-zones-recurse=".=${UPSTREAM_RECURSOR}"
