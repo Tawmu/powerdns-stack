@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the denied page image
+      run: cd deniedpage && docker build . --file Dockerfile --tag pdns-deniedpage:latest
+    - name: Build the pdns master image
+      run: cd pdns-master && docker build . --file Dockerfile --tag pdns-master:latest
+    - name: Build the pdns recursor image
+      run: cd pdns-recursor && docker build . --file Dockerfile --tag pdns-recursor:latest
