@@ -1,0 +1,104 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb:10.6.1
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: area-READY-STUDENT-JUDGE
+    volumes:
+      - ./data/dns-mariadb:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    ports:
+      - 4567:3306/tcp
+    networks:
+      dns-internal:
+        ipv4_address: 172.62.0.5
+
+  pdns-master:
+    image: registry.gitlab.com/epiclan/stacks/pdns-master:latest
+    restart: always
+    environment:
+      MYSQL_USERNAME: pdns
+      MYSQL_PASSWORD: STRAIGHT-HOPE-hawaii-barbados
+      MYSQL_DATABASE: pdns
+      MYSQL_SERVER: mariadb
+      MYSQL_PORT: 3306
+      WEBSERVER_PASSWORD: u5h9HRgD
+      RECURSION_IPS: 0.0.0.0/0
+      API_KEY: WmDNMerqRTVTXpKC6VznRMWVqT
+    depends_on:
+      - mariadb
+    ports:
+      - 5300:5300/udp
+    networks:
+      dns-internal:
+        ipv4_address: 172.62.0.6
+
+  pdns-recursor:
+    image: registry.gitlab.com/epiclan/stacks/pdns-recursor:latest
+    restart: always
+    environment:
+      PDNS_API_KEY: Nu3kmCMRCk25bNhEjhSy3C7wrM
+      WEBSERVER_PASSWORD: qQZ9exgi
+      MASTER_ADDR: 172.62.0.6
+      UPSTREAM_RECURSOR: 10.10.0.6:53
+      ALLOW_FROM: 127.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 169.254.0.0/16, 192.168.0.0/16, 172.16.0.0/12, 81.2.102.240/29, 81.187.218.32/27
+    depends_on:
+      - mariadb
+    ports:
+      - 9082:8081/tcp
+      - 10.10.0.3:53:53/udp
+      - 10.10.0.7:53:53/udp
+    networks:
+      dns-internal:
+        ipv4_address: 172.62.0.7
+
+  powerdns-admin:
+    image: ngoduykhanh/powerdns-admin:latest
+    restart: always
+    environment:
+      SECRET_KEY: thisISaSUPERsecretKEYusedFORc00ki3s
+      SQLALCHEMY_DATABASE_URI: mysql://pdnsadmin:Delouse-Attribute9-Energize@mariadb/pdnsadmin
+    depends_on:
+      - pdns-master
+      - mariadb
+    volumes:
+      - ./data/dns-powerdns-admin:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pa.entryPoints=http
+      - traefik.http.routers.pa.rule=Host(`poweradmin.event.epiclan.net`)
+      - traefik.http.routers.pa.service=pa
+      - traefik.http.services.pa.loadbalancer.server.port=80
+      - traefik.docker.network=traefik-proxy
+    networks:
+      traefik-proxy:
+      dns-internal:
+        ipv4_address: 172.62.0.8
+
+  #Container to serve denied web page
+  dnsfilter-web:
+    image: registry.gitlab.com/epiclan/stacks/pdns-deniedpage:latest
+    restart: always
+    stdin_open: true
+    tty: true
+    networks:
+    - traefik-proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filterweb.entryPoints=http
+      - traefik.http.routers.filterweb.rule=Host(`denied.event.epiclan.net`)
+      - traefik.http.routers.filterweb.service=filterweb
+      - traefik.http.services.filterweb.loadbalancer.server.port=80
+      - traefik.docker.network=traefik-proxy
+    networks:
+      - traefik-proxy
+
+networks:
+   traefik-proxy:
+     external: true
+   dns-internal:
+     driver: bridge
+     ipam:
+       config:
+         - subnet: 172.62.0.0/24

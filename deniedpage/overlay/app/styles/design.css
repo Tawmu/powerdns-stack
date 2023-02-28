@@ -1,0 +1,87 @@
+body {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	line-height: 170%;
+	color: #666666;
+	font-size: 12px;
+}
+
+#container {
+	width: 800px;
+	margin: 0 auto 5px auto;
+}
+
+a {
+	text-decoration: none;
+	color: #e44c0f;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Generic Content Styles */
+
+.center {
+	text-align: center;
+}
+
+#masthead {
+	margin: 10px;
+	text-align: center;
+}
+
+h1 {
+	font-size: 1.8em;
+	line-height: 1.5em;
+	color: #e44c0f;
+	margin-top: 0;
+	text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6, p,
+blockquote, form, label, ul, ol,
+dl {
+	margin: 0.5em 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+	text-decoration: none;
+}
+
+h2 {
+	font-size: 1.7em;
+	line-height: 1.4em;
+}
+
+h3 {
+	font-size: 1.5em;
+	line-height: 1.6em;
+}
+
+h4 {
+	font-size: 1.4em;
+	line-height: 1.5em;
+	margin-top: 10px;
+}
+
+h5 {
+	font-size: 1.2em;
+	line-height: 1.6em;
+}
+
+p {
+	line-height: 1.5em;
+	margin: 10px 0;
+}
+
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
